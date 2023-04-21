@@ -1,7 +1,7 @@
 #Import required libraries and login_required
 import os
 from flask import Flask, flash, redirect, render_template, request, session
-from helpers import lookup, lookup_champs, champ_id_to_name
+from helpers import lookup, lookup_champs, champ_id_to_name, generate_question_skin_name, format_name
 import json
 from flask_session import Session
 
@@ -53,12 +53,9 @@ def found():
 
         # Because of weird naming conventions used by the DB, when a champions name has a space ( ), it gets removed
         # But the second part remains uppercase. However, if it has an apostrophe ('), it gets removed and the second
-        # Part becomes lowercase. Following gates take care of that
+        # Part becomes lowercase. format_name function handles that (see helpers.py)
         for name in mains_names:
-            name = name.replace(" ", "")
-            if "'" in name:
-                name = name.replace("'", "")
-                name = name.capitalize()
+            name = format_name(name)
             images_list.append(f"https://ddragon.leagueoflegends.com/cdn/13.8.1/img/champion/{name}.png")
 
         return render_template("found.html", summoner=summoner, mains_names = mains_names, images_list = images_list)
@@ -77,6 +74,8 @@ def game():
         summoner_id = lookup(summoner, user_region)
         mains_id = lookup_champs(summoner_id, user_region)
         mains_names = champ_id_to_name(mains_id)
+        generate_question_skin_name(mains_names)
+        
 
 
 

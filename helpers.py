@@ -4,14 +4,8 @@ from flask import redirect, render_template, request, session
 from functools import wraps
 import json
 from api_key import key
+import random
 
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get("user_id") is None:
-            return redirect("/login")
-        return f(*args, **kwargs)
-    return decorated_function
 
 def lookup(summoner, region):
     # Uses riot api to get summoner ID
@@ -55,4 +49,29 @@ def champ_id_to_name(mains_id):
                     print(data[x]["name"])
                     mains_names.append(data[x]["name"])
         return mains_names
+    
+def format_name(name):
+    name = name.replace(" ", "")
+    if "'" in name:
+        name = name.replace("'", "")
+        name = name.capitalize()
+    return name
 
+
+def generate_question_skin_name(mains_names):
+    # Function to generate question of the "What skin is this"
+    question = ""
+    answer = ""
+    champion = mains_names[random.randint(0,4)]
+    champion = format_name(champion)
+    print (champion)
+    with open (f"dragontail\\13.8.1\\data\\en_US\\champion\\{champion}.json") as file:
+        data = json.load(file)
+        data = data["data"]
+        data = data[champion]
+        data = data["skins"]
+
+
+        
+        print(data[random.randint(1,len(data))])  #Devuelve skin random  
+    return question, answer
