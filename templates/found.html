@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block main %}
+<h1>MAIN GAME</h1>
+
+<h3></h3>
+
+YOUR SUMMONER NAME IS <br>
+{{summoner}} <br>
+YOUR MAINS ARE <br>
+{{mains_names}} <br>
+
+{% for image in images_list %}
+    <img src={{image}}>
+{% endfor %}
+
+<form action="/game" method="post">
+
+    <button class="btn btn-primary" type="submit">PLAY</button>
+</form>
+
+
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block main %}
+<h1>MAINDLE</h1>
+
+<h3>alguna imagen</h3>
+
+<form action="/found" method="post">
+    <div class="mb-3">
+        <select name="user_region">
+            <option disabled selected>Region</option>
+            {% for region in existing_regions %}
+            <option value="{{region}}">{{region}}</option>
+            {% endfor %}
+        </select>
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="summoner" name="summoner" placeholder="summoner name" type="text">
+    </div>
+    <button class="btn btn-primary" type="submit">TEST ME</button>
+</form>
+
+{% endblock %}
