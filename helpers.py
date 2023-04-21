@@ -3,6 +3,7 @@ import requests
 from flask import redirect, render_template, request, session
 from functools import wraps
 import json
+from api_key import key
 
 def login_required(f):
     @wraps(f)
@@ -15,7 +16,7 @@ def login_required(f):
 def lookup(summoner, region):
     # Uses riot api to get summoner ID
     try:
-        api_key = "RGAPI-3b6ef0f5-f752-4719-8ac2-579b08a206a8"
+        api_key = key()
         summonerName = summoner
         url = f"https://{region}.api.riotgames.com/lol/summoner/v4/summoners/by-name/{summonerName}?api_key={api_key}"
         response = requests.get(url)
@@ -32,7 +33,7 @@ def lookup(summoner, region):
 def lookup_champs(id, region):
     # Uses summoner id to get mains from riot API
     mains = []
-    api_key = "RGAPI-3b6ef0f5-f752-4719-8ac2-579b08a206a8"
+    api_key = key()
     url = f"https://{region}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/{id}/top?count=5&api_key={api_key}"
     response = requests.get(url)
     data = response.json()
