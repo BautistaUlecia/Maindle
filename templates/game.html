@@ -13,6 +13,11 @@ YOUR SUMMONER NAME IS <br>
 {{summoner}} <br>
 YOUR MAINS ARE <br>
 {{mains_names}} <br>
+<img src="{{ url_for('static', filename = filename) }}">
+<footer>
+{% for name in names %}
+    <button>{{name}}</button>
+{% endfor %}
+</footer>
 
-GAME PAGE
 {% endblock %}

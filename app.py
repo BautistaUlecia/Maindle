@@ -74,12 +74,15 @@ def game():
         summoner_id = lookup(summoner, user_region)
         mains_id = lookup_champs(summoner_id, user_region)
         mains_names = champ_id_to_name(mains_id)
-        generate_question_skin_name(mains_names)
+
+        champion, names, id = generate_question_skin_name(mains_names)
+        filename = f"dragontail/img/champion/splash/{champion}_{id}.jpg"
+
         
 
 
 
-        return render_template("game.html", summoner=summoner, mains_names = mains_names)
+        return render_template("game.html", summoner=summoner, mains_names = mains_names, champion = champion, names = names, filename = filename)
 
 
 

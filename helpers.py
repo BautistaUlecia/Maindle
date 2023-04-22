@@ -59,19 +59,32 @@ def format_name(name):
 
 
 def generate_question_skin_name(mains_names):
-    # Function to generate question of the "What skin is this"
+    # Function to generate question of the "What is the name of this skin" kind
     question = ""
     answer = ""
-    champion = mains_names[random.randint(0,4)]
+    champion = mains_names[random.randint(0, len(mains_names)-1)]
     champion = format_name(champion)
     print (champion)
-    with open (f"dragontail\\13.8.1\\data\\en_US\\champion\\{champion}.json") as file:
+    with open (f"static\\dragontail\\13.8.1\\data\\en_US\\champion\\{champion}.json") as file:
+        skins_list = []
+        names = []
         data = json.load(file)
-        data = data["data"]
-        data = data[champion]
-        data = data["skins"]
-
-
+        skins = data["data"][champion]["skins"]
+        #print(skins) # lista de skins para el champ
+        for x in range (0,4):
+            skin = skins[random.randint(1, len(skins)-1)]
+            skins_list.append(skin)
+        print(skins_list) # 4 skins random para el champ
+        for elem in skins_list:
+            names.append(elem["name"])
+        image_id = (skins_list[0]["num"])
         
-        print(data[random.randint(1,len(data))])  #Devuelve skin random  
-    return question, answer
+        
+        print(names)
+        print(image_id)
+
+
+
+
+
+    return champion, names, image_id
