@@ -21,8 +21,9 @@ Session(app)
 # Index to search for summoner
 @app.route("/", methods=["GET", "POST"])
 def index():
+    filename = "dragontail/13.8.1/img/item/1104.png"
     existing_regions=["BR1", "EUN1", "EUW1", "JP1", "KR", "LA1", "LA2", "NA1", "OC1"]
-    return render_template("index.html", existing_regions = existing_regions)
+    return render_template("index.html", existing_regions = existing_regions, filename = filename)
 
 
 
