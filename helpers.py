@@ -16,7 +16,6 @@ def lookup(summoner, region):
         response = requests.get(url)
     except requests.RequestException:
         return None
-    #parse
     try:
         data = response.json()
         return(data["id"])
@@ -26,21 +25,27 @@ def lookup(summoner, region):
 
 def lookup_champs(id, region):
     # Uses summoner id to get mains from riot API
+    # Some scuffed documentation i used to figure this out
+    # https://developer.riotgames.com/apis#champion-mastery-v4
     mains = []
     api_key = key()
     url = f"https://{region}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/{id}/top?count=5&api_key={api_key}"
     response = requests.get(url)
     data = response.json()
+
+    # Data returns dictionary, store only championid (maybe should optimize this)
     for x in data:
         mains.append(x["championId"])
     return mains
 
 def champ_id_to_name(mains_id):
-    print(mains_id)
+    # Champion.json contains cross-reference between id and name
     with open("champion.json", errors="ignore", encoding="utf-8") as file:
         mains_names = []
-        data = json.load(file)
-        data = data["data"]
+        champions = json.load(file)
+        data = champions["data"]
+        
+        # If here data stores all info for all champs. index by id, if they match mains_id, store name.
         for x in data:
             key = data[x]["key"]
             key = int(key)
@@ -51,6 +56,7 @@ def champ_id_to_name(mains_id):
         return mains_names
     
 def format_name(name):
+    # Takes care of weird name formatting inside riot's database
     name = name.replace(" ", "")
     if "'" in name:
         name = name.replace("'", "")
@@ -61,7 +67,7 @@ def format_name(name):
 def generate_question_skin_name(mains_names):
     # Function to generate question of the "What is the name of this skin" kind
 
-    # Select random champ from mains_names list, format and store
+    # Select one random champ from mains_names list, format and store
     champion = mains_names[random.randint(0, len(mains_names)-1)]
     champion = format_name(champion)
 
@@ -107,14 +113,11 @@ def generate_question_spell_name(mains_names):
         # Id list for image
         image_id = spells[num]["id"]
 
-        # Spell name for answers
+        # Spell name for answers, correct answer will be names[num]
         for spell in spells:
             names.append(spell["name"])
 
-        return champion, names, image_id
-
-        print(id)
-        print(name_list)
+        return num, names, image_id
 
 
 
