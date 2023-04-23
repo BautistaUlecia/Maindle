@@ -1,6 +1,6 @@
 import os
 from flask import Flask, flash, redirect, render_template, request, session
-from helpers import lookup, lookup_champs, champ_id_to_name, generate_question_skin_name, format_name, generate_question_spell_name
+from helpers import lookup, lookup_champs, champ_id_to_name, generate_question_skin_name, format_name, generate_question_spell_name, generate_question_mastery
 import json
 from flask_session import Session
 import random
@@ -22,7 +22,7 @@ Session(app)
 @app.route("/", methods=["GET", "POST"])
 def index():
     filename = "dragontail/13.8.1/img/item/1104.png"
-    existing_regions=["BR1", "EUN1", "EUW1", "JP1", "KR", "LA1", "LA2", "NA1", "OC1"]
+    existing_regions=["LA2", "BR1", "EUN1", "EUW1", "JP1", "KR", "LA1", "NA1", "OC1"]
     return render_template("index.html", existing_regions = existing_regions, filename = filename)
 
 
@@ -49,7 +49,8 @@ def found():
             return("invalid summoner name")
 
         # Using summoner_id (encrypted number sent by riot's API), get most played champions by id for that user (again, peep helpers)
-        session["mains_id"] = lookup_champs(session["summoner_id"], user_region)
+        session["mains_id"], session["mastery"] = lookup_champs(session["summoner_id"], user_region)
+        print(session["mastery"])
 
         # Convert ids to their respective champion names
         session["mains_names"] = champ_id_to_name(session["mains_id"])
@@ -98,6 +99,9 @@ def skin():
         if (random.randint(1,2) == 1):
             return redirect("/spell")
         
+        if (random.randint(1,2) == 1):
+            return redirect("/mastery")
+        
         else:
             # Generate question of the "What skin is this" type
             champion, names, id = generate_question_skin_name(session["mains_names"])
@@ -133,6 +137,8 @@ def spell():
         # Redirect to other question types
         if (random.randint(1,2) == 1):
             return redirect("/skin")
+        if (random.randint(1,2) == 1):
+            return redirect("/mastery")
         
         # If posted and not redirected, compute last known answer and generate another question
         if (session["user_answer"].lower() == session["correct_answer"].lower()):
@@ -144,3 +150,38 @@ def spell():
 
 
     return render_template("spell.html", summoner=session["summoner"],  names = names, filename = filename, score = session["score"])
+
+
+
+
+
+
+@app.route("/mastery", methods=["GET", "POST"])
+def mastery():
+    if request.method == "GET":
+        mastery, question, roll, name = generate_question_mastery(session["mains_id"], session["mastery"])
+        name = format_name(name)
+        filename = f"dragontail/13.8.1/img/champion/{name}.png"
+        session["correct_answer"] = roll
+        return render_template("mastery.html", mastery = mastery, question = question, roll = roll, filename = filename, name = name)
+    
+    if request.method == "POST":
+
+        if session["correct_answer"] == 1:
+            if request.form.get("answer") == "LESS":
+                session["score"] += 1
+        if session["correct_answer"] == 2:
+            if request.form.get("answer") == "MORE":
+                session["score"] += 1
+
+        if (random.randint(1,2) == 1):
+            return redirect("/skin")
+        if (random.randint(1,2) == 1):
+            return redirect("/spell")
+
+        mastery, question, roll, name = generate_question_mastery(session["mains_id"], session["mastery"])
+        name = format_name(name)
+        filename = f"dragontail/13.8.1/img/champion/{name}.png"
+        session["correct_answer"] = roll
+
+        return render_template("mastery.html", mastery = mastery, question = question, roll = roll, filename = filename, name = name)

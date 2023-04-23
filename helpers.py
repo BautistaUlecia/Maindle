@@ -28,6 +28,7 @@ def lookup_champs(id, region):
     # Some scuffed documentation i used to figure this out
     # https://developer.riotgames.com/apis#champion-mastery-v4
     mains = []
+    mastery = []
     api_key = key()
     url = f"https://{region}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/{id}/top?count=5&api_key={api_key}"
     response = requests.get(url)
@@ -36,7 +37,8 @@ def lookup_champs(id, region):
     # Data returns dictionary, store only championid (maybe should optimize this)
     for x in data:
         mains.append(x["championId"])
-    return mains
+        mastery.append(x["championPoints"])
+    return mains, mastery
 
 def champ_id_to_name(mains_id):
     # Champion.json contains cross-reference between id and name
@@ -51,7 +53,6 @@ def champ_id_to_name(mains_id):
             key = int(key)
             for y in mains_id:
                 if key == y:
-                    print(data[x]["name"])
                     mains_names.append(data[x]["name"])
         return mains_names
     
@@ -144,8 +145,31 @@ def generate_question_spell_name(mains_names):
                 names.append(spell["name"])
     return names """
 
-def generate_question_mastery(mains_names):
-    # Generate some question related to mastery points. Not sure exactly what yet.
+def generate_question_mastery(ids, mastery):
+    num = random.randint(0,4)
+    id = []
+    id.append(ids[num])
+    name = champ_id_to_name(id)
+    print(name)
+    print(mastery[num])
+
+    # Generar un numero entre 10% y  50% mayor o uno entre 10% y 50% menor y devolver respuesta (tengo mas o menos que esto de maestria)
+    # Roll to see if question is about more or less mastery than
+    roll = random.randint(1,2)
+    if (roll == 1):
+        question_upper = int((mastery[num] * 150) / 100)
+        print(question_upper)
+        question_lower = int((mastery[num] * 125) / 100)
+        print(question_lower)
+        question = random.randint(question_lower, question_upper)
+        print(question)
+    else:
+        question_upper = int((mastery[num] * 85) / 100)
+        #print(question_upper)
+        question_lower = int((mastery[num] * 50) / 100)
+        #print(question_lower)
+        question = random.randint(question_lower, question_upper)
+        print(question)
 
 
-    return
+    return mastery[num], question, roll, name[0]
