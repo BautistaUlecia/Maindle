@@ -90,7 +90,7 @@ def skin():
     if request.method=="POST":
         # First compute answer for the original GET request
         session["user_answer"] = request.form.get("answer")
-        if (session["user_answer"] == session["correct_answer"]):
+        if (session["user_answer"].lower() == session["correct_answer"].lower()):
             session["score"] += 1
 
         # Chance of getting redirected to the other question type, keeps the game dynamic, will add more types
@@ -134,7 +134,7 @@ def spell():
             return redirect("/skin")
         
         # If posted and not redirected, compute last known answer and generate another question
-        if (session["user_answer"] == session["correct_answer"]):
+        if (session["user_answer"].lower() == session["correct_answer"].lower()):
             session["score"] += 1
         
         num, names, id = generate_question_spell_name(session["mains_names"])

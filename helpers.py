@@ -57,6 +57,14 @@ def champ_id_to_name(mains_id):
     
 def format_name(name):
     # Takes care of weird name formatting inside riot's database
+    if name == "K'Sante":
+        return "KSante"
+    if name == "Kog'Maw":
+        return "KogMaw"
+    if name == "Rek'Sai":
+        return "RekSai"
+    if name == "Wukong":
+        return "MonkeyKing"
     name = name.replace(" ", "")
     if "'" in name:
         name = name.replace("'", "")
@@ -118,7 +126,26 @@ def generate_question_spell_name(mains_names):
             names.append(spell["name"])
 
         return num, names, image_id
+    
+# Horrible function i wrote because riot games doesn't give a list of abilities. had to make my own parsing data, thought it was interesting to add.
+""" def get_ability_names():
+    formatted_list = []
+    names = []
+    mains_names=["Aatrox","Akshan","Renata","Vex","Zeri","Bel'Veth","Nilah","K'Sante","Milio","Ahri","Akali","Alistar","Amumu","Anivia","Annie","Aphelios","Ashe","Aurelion Sol","Azir","Bard","Blitzcrank","Brand","Braum","Caitlyn","Camille","Cassiopeia","Cho'Gath","Corki","Darius","Diana","Dr Mundo","Draven","Ekko","Elise","Evelynn","Ezreal","Fiddlesticks","Fiora","Fizz","Galio","Gangplank","Garen","Gnar","Gragas","Graves","Gwen","Hecarim","Heimerdinger","Illaoi","Irelia","Ivern","Janna","Jarvan IV","Jax","Jayce","Jhin","Jinx","Kaisa","Kalista","Karma","Karthus","Kassadin","Katarina","Kayle","Kayn","Kennen","Kha'Zix","Kindred","Kled","Kog'Maw","Leblanc","Lee Sin","Leona","Lillia","Lissandra","Lucian","Lulu","Lux","Malphite","Malzahar","Maokai","Master Yi","Miss Fortune","Mordekaiser","Morgana","Nami","Nasus","Nautilus","Neeko","Nidalee","Nocturne","Nunu","Olaf","Orianna","Ornn","Pantheon","Poppy","Pyke","Qiyana","Quinn","Rakan","Rammus","Rek'Sai","Rell","Renekton","Rengar","Riven","Rumble","Ryze","Samira","Sejuani","Senna","Seraphine","Sett","Shaco","Shen","Shyvana","Singed","Sion","Sivir","Skarner","Sona","Soraka","Swain","Sylas","Syndra","Tahm Kench","Taliyah","Talon","Taric","Teemo","Thresh","Tristana","Trundle","Tryndamere","Twisted Fate","Twitch","Udyr","Urgot","Varus","Vayne","Veigar","Vel'Koz","Vi","Viktor","Vladimir","Volibear","Warwick","Wukong","Xayah","Xerath","Xin Zhao","Yasuo","Yone","Yorick","Yuumi","Zac","Zed","Ziggs","Zilean","Zoe","Zyra"]
+    for main in mains_names:
+        formatted = format_name(main)
+        formatted_list.append(formatted)
+
+    for name in formatted_list:
+        with open (f"static\\dragontail\\13.8.1\\data\\en_US\\champion\\{name}.json", encoding="utf8") as asd:
+            data = json.load(asd)
+            spells = data["data"][name]["spells"]
+            for spell in spells:
+                names.append(spell["name"])
+    return names """
+
+def generate_question_mastery(mains_names):
+    # Generate some question related to mastery points. Not sure exactly what yet.
 
 
-
-
+    return
