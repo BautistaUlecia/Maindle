@@ -1,9 +1,10 @@
 #Import required libraries and login_required
 import os
 from flask import Flask, flash, redirect, render_template, request, session
-from helpers import lookup, lookup_champs, champ_id_to_name, generate_question_skin_name, format_name
+from helpers import lookup, lookup_champs, champ_id_to_name, generate_question_skin_name, format_name, generate_question_spell_name
 import json
 from flask_session import Session
+import random
 
 
 #Configure application
@@ -29,7 +30,6 @@ def index():
 
 
 
-# Summoner found page, maybe game goes here, will decide later
 @app.route("/found", methods=["GET", "POST"])
 def found():
     if request.method=="POST":
@@ -39,6 +39,7 @@ def found():
         # Get summoner id from riot API
         session["summoner"] = summoner = request.form.get("summoner")
         session["region"] = user_region = request.form.get("user_region")
+        session["score"] = 0
         summoner_id = lookup(summoner, user_region)
         if summoner_id is None:
             return("invalid summoner name")
@@ -56,7 +57,7 @@ def found():
         # Part becomes lowercase. format_name function handles that (see helpers.py)
         for name in mains_names:
             name = format_name(name)
-            images_list.append(f"https://ddragon.leagueoflegends.com/cdn/13.8.1/img/champion/{name}.png")
+            images_list.append(f"dragontail/13.8.1/img/champion/{name}.png") 
 
         return render_template("found.html", summoner=summoner, mains_names = mains_names, images_list = images_list)
 
@@ -65,27 +66,53 @@ def found():
 
 
 
-@app.route("/game", methods=["GET", "POST"])
-def game():
-    if request.method=="POST":
-        mains_id = []
-        summoner = session["summoner"]
-        user_region = session["region"]
-        summoner_id = lookup(summoner, user_region)
-        mains_id = lookup_champs(summoner_id, user_region)
-        mains_names = champ_id_to_name(mains_id)
-
+@app.route("/skin", methods=["GET", "POST"])
+def skin():
+    mains_id = []
+    summoner = session["summoner"]
+    user_region = session["region"]
+    summoner_id = lookup(summoner, user_region)
+    mains_id = lookup_champs(summoner_id, user_region)
+    mains_names = champ_id_to_name(mains_id)
+    
+    if request.method=="GET":
         champion, names, id = generate_question_skin_name(mains_names)
         filename = f"dragontail/img/champion/splash/{champion}_{id}.jpg"
+        session["correct_answer"] = names[0]
+        random.shuffle(names)
+        return render_template("skin.html", summoner=summoner, names = names, filename = filename, score = session["score"])
 
+    if request.method=="POST":
+        # First compute answer for the original GET request
+        user_answer = request.form.get("answer")
+        if (user_answer == session["correct_answer"]):
+            session["score"] += 1
+
+        if (random.randint(1,2) == 1):
+            return redirect("/spell")
         
+        else:
+            # Generate question of the "What skin is this" type
+            champion, names, id = generate_question_skin_name(mains_names)
+            session["correct_answer"] = names[0]
+            filename = f"dragontail/img/champion/splash/{champion}_{id}.jpg"
+            random.shuffle(names)
+            return render_template("skin.html", summoner=summoner,  names = names, filename = filename, score = session["score"])
 
 
 
-        return render_template("game.html", summoner=summoner, mains_names = mains_names, champion = champion, names = names, filename = filename)
 
 
+@app.route("/spell", methods=["GET", "POST"])
+def spell():
+    mains_id = []
+    summoner = session["summoner"]
+    user_region = session["region"]
+    summoner_id = lookup(summoner, user_region)
+    mains_id = lookup_champs(summoner_id, user_region)
+    mains_names = champ_id_to_name(mains_id)
 
+    champion, names, id = generate_question_spell_name(mains_names)
+    filename = f"dragontail/13.8.1/img/spell/{id}.png"
 
-
-
+    return render_template("spell.html", summoner=summoner,  names = names, filename = filename, score = session["score"])

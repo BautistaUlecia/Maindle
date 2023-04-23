@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    skin question
+{% endblock %}
+
+{% block main %}
+<h1>MAINDLE</h1>
+
+<h4>{{summoner}}</h4>
+<h4>SCORE = {{session["score"]}}</h4>
+
+
+<img src="{{ url_for('static', filename = filename) }}">
+<footer>
+    <form action="/skin" method="post">
+        {% for name in names %}
+            <button value="{{name}}" name="answer">{{name}}</button>
+        {% endfor %}
+    </form>
+</footer>
+{% endblock %}

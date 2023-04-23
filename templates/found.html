@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Index
+    Found
 {% endblock %}
 
 {% block main %}
@@ -15,10 +15,10 @@ YOUR MAINS ARE <br>
 {{mains_names}} <br>
 
 {% for image in images_list %}
-    <img src={{image}}>
+    <img src="{{ url_for('static', filename = image) }}">
 {% endfor %}
 
-<form action="/game" method="post">
+<form action="/skin" method="get">
 
     <button class="btn btn-primary" type="submit">PLAY</button>
 </form>

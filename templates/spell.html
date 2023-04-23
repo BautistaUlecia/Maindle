@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    spell question
+{% endblock %}
+
+{% block main %}
+<h1>MAINDLE</h1>
+
+<h4>{{summoner}}</h4>
+<h4>SCORE = {{session["score"]}}</h4>
+
+
+<img src="{{ url_for('static', filename = filename) }}">
+<footer>
+    <form action="/spell" method="post">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="spell" name="spell" placeholder="" type="text">
+        <button type="submit">OK</button>
+    </form>
+</footer>
+{% endblock %}

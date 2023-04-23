@@ -60,31 +60,62 @@ def format_name(name):
 
 def generate_question_skin_name(mains_names):
     # Function to generate question of the "What is the name of this skin" kind
-    question = ""
-    answer = ""
+
+    # Select random champ from mains_names list, format and store
     champion = mains_names[random.randint(0, len(mains_names)-1)]
     champion = format_name(champion)
-    print (champion)
+
+    # Open file with information about that specific champ
     with open (f"static\\dragontail\\13.8.1\\data\\en_US\\champion\\{champion}.json") as file:
-        skins_list = []
+        skins_list = [] 
         names = []
+
+        # Load data into list of dictionaries, trim into only skins for that champ
         data = json.load(file)
         skins = data["data"][champion]["skins"]
-        #print(skins) # lista de skins para el champ
-        for x in range (0,4):
-            skin = skins[random.randint(1, len(skins)-1)]
+
+        # Select 4 random skins from list
+        samples = random.sample(range(1, len(skins)-1), 4)
+        for sample in samples:
+            skin = skins[sample]
             skins_list.append(skin)
-        print(skins_list) # 4 skins random para el champ
+
+        # Append their names and the id for the first one (will be the right one)
         for elem in skins_list:
             names.append(elem["name"])
         image_id = (skins_list[0]["num"])
-        
-        
-        print(names)
-        print(image_id)
 
-
-
-
+        #Return champion name, list of skin names and id to look for the question's image. Correct answer will be names[0]
 
     return champion, names, image_id
+
+
+
+def generate_question_spell_name(mains_names):
+    # Function to generate question of the "What is the name of this ability" kind
+
+    # Select random champ from mains_names list, format and store
+    champion = mains_names[random.randint(0, len(mains_names)-1)]
+    champion = format_name(champion)
+
+    # Open file with information about that specific champ
+    with open (f"static\\dragontail\\13.8.1\\data\\en_US\\champion\\{champion}.json") as file:
+        names = []
+        data = json.load(file)
+        spells = data["data"][champion]["spells"]
+        num = random.randint(0,3)
+        # Id list for image
+        image_id = spells[num]["id"]
+
+        # Spell name for answers
+        for spell in spells:
+            names.append(spell["name"])
+
+        return champion, names, image_id
+
+        print(id)
+        print(name_list)
+
+
+
+
