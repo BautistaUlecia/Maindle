@@ -153,7 +153,6 @@ def generate_question_mastery(ids, mastery):
     #print(name)
     #print(mastery[num])
 
-    # Generar un numero entre 10% y  50% mayor o uno entre 10% y 50% menor y devolver respuesta (tengo mas o menos que esto de maestria)
     # Roll to see if question is about more or less mastery than
     roll = random.randint(1,2)
     if (roll == 1):
