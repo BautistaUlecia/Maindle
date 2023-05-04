@@ -150,26 +150,26 @@ def generate_question_mastery(ids, mastery):
     id = []
     id.append(ids[num])
     name = champ_id_to_name(id)
-    print(name)
-    print(mastery[num])
+    #print(name)
+    #print(mastery[num])
 
     # Generar un numero entre 10% y  50% mayor o uno entre 10% y 50% menor y devolver respuesta (tengo mas o menos que esto de maestria)
     # Roll to see if question is about more or less mastery than
     roll = random.randint(1,2)
     if (roll == 1):
         question_upper = int((mastery[num] * 150) / 100)
-        print(question_upper)
+        #print(question_upper)
         question_lower = int((mastery[num] * 125) / 100)
-        print(question_lower)
+        #print(question_lower)
         question = random.randint(question_lower, question_upper)
-        print(question)
+        #print(question)
     else:
         question_upper = int((mastery[num] * 85) / 100)
         #print(question_upper)
         question_lower = int((mastery[num] * 50) / 100)
         #print(question_lower)
         question = random.randint(question_lower, question_upper)
-        print(question)
+        #print(question)
 
 
     return mastery[num], question, roll, name[0]

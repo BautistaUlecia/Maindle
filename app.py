@@ -1,5 +1,5 @@
 import os
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, redirect, render_template, request, session
 from helpers import lookup, lookup_champs, champ_id_to_name, generate_question_skin_name, format_name, generate_question_spell_name, generate_question_mastery
 import json
 from flask_session import Session
@@ -38,6 +38,8 @@ def found():
 
         # Set variables for current user in session
         session["score"] = 0
+        session["user_answer"] = "1"
+        session["correct_answer"] = "0"
 
         # Store name and region entered by user
         session["summoner"]  = request.form.get("summoner")
@@ -50,7 +52,7 @@ def found():
 
         # Using summoner_id (encrypted number sent by riot's API), get most played champions by id for that user (again, peep helpers)
         session["mains_id"], session["mastery"] = lookup_champs(session["summoner_id"], user_region)
-        print(session["mastery"])
+        #print(session["mastery"])
 
         # Convert ids to their respective champion names
         session["mains_names"] = champ_id_to_name(session["mains_id"])
@@ -75,12 +77,10 @@ def found():
 
 @app.route("/skin", methods=["GET", "POST"])
 def skin():
-    # Score computation. Feels hacky and wrong. Should find a better way
     if request.method=="GET":
         if (session["user_answer"] == session["correct_answer"]):
             session["score"] += 1
-
-        # After computation, generate a question and render it on screen. Filename is the image for that question
+        # Generate a question and render it on screen. Filename is the image for that question
         champion, names, id = generate_question_skin_name(session["mains_names"])
         filename = f"dragontail/img/champion/splash/{champion}_{id}.jpg"
 
@@ -90,10 +90,8 @@ def skin():
         return render_template("skin.html", summoner=session["summoner"], names = names, filename = filename, score = session["score"])
 
     if request.method=="POST":
-        # First compute answer for the original GET request
+        # Remember answer from the original request
         session["user_answer"] = request.form.get("answer")
-        if (session["user_answer"].lower() == session["correct_answer"].lower()):
-            session["score"] += 1
 
         # Chance of getting redirected to the other question type, keeps the game dynamic, will add more types
         if (random.randint(1,2) == 1):
@@ -103,6 +101,10 @@ def skin():
             return redirect("/mastery")
         
         else:
+            # If not redirected, about to generate another skin question. Compute original answer before asigning new one
+            session["user_answer"] = request.form.get("answer")
+            if (session["user_answer"] == session["correct_answer"]):
+                session["score"] += 1
             # Generate question of the "What skin is this" type
             champion, names, id = generate_question_skin_name(session["mains_names"])
             session["correct_answer"] = names[0]
@@ -121,6 +123,8 @@ def skin():
 @app.route("/spell", methods=["GET", "POST"])
 def spell():
     if request.method=="GET":
+        if (session["user_answer"] == session["correct_answer"]):
+            session["score"] += 1
         # Generate question of the "What is this spell" type
         num, names, id = generate_question_spell_name(session["mains_names"])
         filename = f"dragontail/13.8.1/img/spell/{id}.png"
@@ -141,7 +145,7 @@ def spell():
             return redirect("/mastery")
         
         # If posted and not redirected, compute last known answer and generate another question
-        if (session["user_answer"].lower() == session["correct_answer"].lower()):
+        if (session["user_answer"] == session["correct_answer"]):
             session["score"] += 1
         
         num, names, id = generate_question_spell_name(session["mains_names"])
@@ -159,14 +163,18 @@ def spell():
 @app.route("/mastery", methods=["GET", "POST"])
 def mastery():
     if request.method == "GET":
+        print(session["user_answer"])
+        print(session["correct_answer"])
+        if (session["user_answer"] == session["correct_answer"]):
+            session["score"] += 1
         mastery, question, roll, name = generate_question_mastery(session["mains_id"], session["mastery"])
         name = format_name(name)
         filename = f"dragontail/13.8.1/img/champion/{name}.png"
         session["correct_answer"] = roll
         return render_template("mastery.html", mastery = mastery, question = question, roll = roll, filename = filename, name = name)
     
+    
     if request.method == "POST":
-
         if session["correct_answer"] == 1:
             if request.form.get("answer") == "LESS":
                 session["score"] += 1
