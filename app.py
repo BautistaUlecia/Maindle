@@ -1,5 +1,5 @@
 import os
-from flask import Flask, redirect, render_template, request, session
+from flask import Flask, redirect, render_template, request, session, flash
 from helpers import lookup, lookup_champs, champ_id_to_name, generate_question_skin_name, format_name, generate_question_spell_name, generate_question_mastery
 import json
 from flask_session import Session
@@ -50,7 +50,8 @@ def found():
         # Use it to call riot's API for encrypted summoner id (see helpers.py)
         session["summoner_id"] = lookup(session["summoner"], user_region)
         if session["summoner_id"] is None:
-            return("invalid summoner name")
+            flash(u"INVALID SUMMONER NAME", "error")
+            return redirect("/")
 
         # Using summoner_id (encrypted number sent by riot's API), get most played champions by id for that user (again, peep helpers)
         session["mains_id"], session["mastery"] = lookup_champs(session["summoner_id"], user_region)

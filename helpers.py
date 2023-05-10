@@ -34,7 +34,7 @@ def lookup_champs(id, region):
     response = requests.get(url)
     data = response.json()
 
-    # Data returns dictionary, store only championid (maybe should optimize this)
+    # Data returns dictionary, store only championid
     for x in data:
         mains.append(x["championId"])
         mastery.append(x["championPoints"])
@@ -76,32 +76,43 @@ def format_name(name):
 def generate_question_skin_name(mains_names):
     # Function to generate question of the "What is the name of this skin" kind
 
+    skins = []
+    skins_list = [] 
+    names = []
+
     # Select one random champ from mains_names list, format and store
     champion = mains_names[random.randint(0, len(mains_names)-1)]
     champion = format_name(champion)
 
-    # Open file with information about that specific champ
-    with open (f"static\\dragontail\\13.8.1\\data\\en_US\\champion\\{champion}.json") as file:
-        skins_list = [] 
-        names = []
+    # Load JSON for that specific champ, get data for skins into "skins"
+    file = open (f"static\\dragontail\\13.8.1\\data\\en_US\\champion\\{champion}.json" , errors="ignore", encoding="utf-8")
+    data = json.load(file)
+    skins = data["data"][champion]["skins"]
 
-        # Load data into list of dictionaries, trim into only skins for that champ
+    # Check that function never returns a champion with less than 4 skins (check 5 because first element is default skin)
+    while (len(skins) < 5):
+        file.close()
+        skins = []
+        champion = mains_names[random.randint(0, len(mains_names)-1)]
+        champion = format_name(champion)
+        print(champion)
+        file = open (f"static\\dragontail\\13.8.1\\data\\en_US\\champion\\{champion}.json" , errors="ignore", encoding="utf-8")
         data = json.load(file)
         skins = data["data"][champion]["skins"]
+        print(skins)
 
-        # Select 4 random skins from list
-        samples = random.sample(range(1, len(skins)-1), 4)
-        for sample in samples:
-            skin = skins[sample]
-            skins_list.append(skin)
+    # Select 4 random skins from list
+    samples = random.sample(range(1, len(skins)-1), 4)
+    for sample in samples:
+        skin = skins[sample]
+        skins_list.append(skin)
 
-        # Append their names and the id for the first one (will be the right one)
-        for elem in skins_list:
-            names.append(elem["name"])
-        image_id = (skins_list[0]["num"])
+    # Append their names and the id for the first one (will be the right one)
+    for elem in skins_list:
+        names.append(elem["name"])
+    image_id = (skins_list[0]["num"])
 
-        #Return champion name, list of skin names and id to look for the question's image. Correct answer will be names[0]
-
+    #Return champion name, list of skin names and id to look for the question's image. Correct answer will be names[0]
     return champion, names, image_id
 
 

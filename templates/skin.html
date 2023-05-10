@@ -6,16 +6,14 @@
 
 {% block main %}
 <h1> <a href="/">MAINDLE</h1></a>
-
-<h4>{{summoner}}</h4>
-<h4>SCORE = {{session["score"]}}</h4>
+<h4>SCORE: {{session["score"]}}</h4>
 
 
 <img src="{{filename}}">
 <footer>
     <form action="/skin" method="post">
         {% for name in names %}
-            <button value="{{name}}" name="answer">{{name}}</button>
+            <button value="{{name}}" name="answer" class="btn btn-primary btn-lg btn-custom">{{name}}</button>
         {% endfor %}
     </form>
 </footer>

@@ -1,0 +1,33 @@
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    line-height: 60px; /* Vertically center the text there */
+  }
+
+  .btn-custom {
+    padding: 15px 30px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: black;
+    border-color: black;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .btn-custom:hover,
+  .btn-custom:focus {
+    background-color: #45a049;
+    border-color: #45a049;
+    color: #ffffff;
+  }
+  
+  h4{
+    color:blueviolet
+  }
+  
+  .invalid{
+    background-color: red;
+  }

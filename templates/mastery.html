@@ -7,16 +7,15 @@ mastery question
 {% block main %}
 <h1> <a href="/">MAINDLE</h1></a>
 
-<h4>{{session["summoner"]}}</h4>
-<h4>SCORE = {{session["score"]}}</h4>
+<h4>SCORE: {{session["score"]}}</h4>
 
 
 <img src="{{filename}}"> <br>
 <h2>Would you, {{session["summoner"]}}, say that you have MORE or LESS than {{'{:,}'.format(question)}} mastery with {{name}}</h2>
 <footer>
     <form action="/mastery" method="post">
-            <button value="MORE" name="answer">MORE</button>
-            <button value="LESS" name="answer">LESS</button>
+            <button value="MORE" name="answer" class="btn btn-primary btn-lg btn-custom">MORE</button>
+            <button value="LESS" name="answer" class="btn btn-primary btn-lg btn-custom">LESS</button>
     </form>
 </footer>
 {% endblock %}

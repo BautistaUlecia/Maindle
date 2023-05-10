@@ -6,19 +6,31 @@
 
 {% block main %}
 <h1>MAINDLE</h1>
+<div class="invalid">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+</div>
 
-<h3><img src="{{filename}}"></h3>
+<h3><img src="{{filename}}" class="img-fluid"></h3>
 
-<form action="/found" method="post">
-    <div class="mb-3">
-        <select name="user_region">
-            {% for region, name in region_info %}
-            <option value="{{region}}">{{name}}</option>
-            {% endfor %}
-        </select>
-        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="summoner" name="summoner" placeholder="summoner name" type="text">
-    </div>
+<form action="/found" method="post" class="form-inline justify-content-center align-items-center">
+    <select name="user_region" class="custom-select">
+        {% for region, name in region_info %}
+        <option value="{{region}}">{{name}}</option>
+        {% endfor %}
+    </select>
+    <input autocomplete="off" autofocus class="form-control" id="summoner" name="summoner" placeholder="summoner name" type="text">
     <button class="btn btn-primary" type="submit">a darle :v</button>
 </form>
+
+<footer class="footer text-muted">
+    Made with 💗 by <a href="https://github.com/BautistaUlecia" target="_blank">BautistaUlecia</a>
+</footer>
+
 
 {% endblock %}
