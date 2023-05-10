@@ -12,9 +12,8 @@
 <form action="/found" method="post">
     <div class="mb-3">
         <select name="user_region">
-            <option disabled selected value=>Region</option>
-            {% for region in existing_regions %}
-            <option value="{{region}}">{{region}}</option>
+            {% for region, name in region_info %}
+            <option value="{{region}}">{{name}}</option>
             {% endfor %}
         </select>
         <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="summoner" name="summoner" placeholder="summoner name" type="text">

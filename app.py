@@ -22,8 +22,10 @@ Session(app)
 @app.route("/", methods=["GET", "POST"])
 def index():
     filename = "https://ddragon.leagueoflegends.com/cdn/13.8.1/img/item/1104.png"
-    existing_regions=["LA2", "BR1", "EUN1", "EUW1", "JP1", "KR", "LA1", "NA1", "OC1"]
-    return render_template("index.html", existing_regions = existing_regions, filename = filename)
+    region_codes=["LA2", "BR1", "EUN1", "EUW1", "JP1", "KR", "LA1", "NA1", "OC1"]
+    region_names = ["LAS", "BR", "EUNE", "EUW", "JP", "KR", "LAN", "NA", "OCE"]
+    region_info = zip(region_codes, region_names)
+    return render_template("index.html", filename = filename, region_info = region_info)
 
 
 
