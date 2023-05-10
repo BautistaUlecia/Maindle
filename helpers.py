@@ -42,7 +42,7 @@ def lookup_champs(id, region):
 
 def champ_id_to_name(mains_id):
     # Champion.json contains cross-reference between id and name
-    with open("champion.json", errors="ignore", encoding="utf-8") as file:
+    with open("static\\dragontail\\13.8.1\\data\\en_US\\champion.json", errors="ignore", encoding="utf-8") as file:
         mains_names = []
         champions = json.load(file)
         data = champions["data"]
@@ -156,9 +156,9 @@ def generate_question_mastery(ids, mastery):
     # Roll to see if question is about more or less mastery than
     roll = random.randint(1,2)
     if (roll == 1):
-        question_upper = int((mastery[num] * 150) / 100)
+        question_upper = int((mastery[num] * 160) / 100)
         #print(question_upper)
-        question_lower = int((mastery[num] * 125) / 100)
+        question_lower = int((mastery[num] * 135) / 100)
         #print(question_lower)
         question = random.randint(question_lower, question_upper)
         #print(question)

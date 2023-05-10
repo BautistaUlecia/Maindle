@@ -21,7 +21,7 @@ Session(app)
 # Index to search for summoner
 @app.route("/", methods=["GET", "POST"])
 def index():
-    filename = "dragontail/13.8.1/img/item/1104.png"
+    filename = "https://ddragon.leagueoflegends.com/cdn/13.8.1/img/item/1104.png"
     existing_regions=["LA2", "BR1", "EUN1", "EUW1", "JP1", "KR", "LA1", "NA1", "OC1"]
     return render_template("index.html", existing_regions = existing_regions, filename = filename)
 
@@ -62,7 +62,7 @@ def found():
         # Part becomes lowercase. format_name function handles that
         for name in session["mains_names"]:
             name = format_name(name)
-            images_list.append(f"dragontail/13.8.1/img/champion/{name}.png") 
+            images_list.append(f"https://ddragon.leagueoflegends.com/cdn/13.8.1/img/champion/{name}.png")
 
         return render_template("found.html", summoner=session["summoner"], mains_names = session["mains_names"], images_list = images_list)
 
@@ -82,7 +82,7 @@ def skin():
             session["score"] += 1
         # Generate a question and render it on screen. Filename is the image for that question
         champion, names, id = generate_question_skin_name(session["mains_names"])
-        filename = f"dragontail/img/champion/splash/{champion}_{id}.jpg"
+        filename = f"https://ddragon.leagueoflegends.com/cdn/img/champion/splash/{champion}_{id}.jpg"
 
         # Remember correct answer (again feels hacky / wrong)
         session["correct_answer"] = names[0]
@@ -108,7 +108,7 @@ def skin():
             # Generate question of the "What skin is this" type
             champion, names, id = generate_question_skin_name(session["mains_names"])
             session["correct_answer"] = names[0]
-            filename = f"dragontail/img/champion/splash/{champion}_{id}.jpg"
+            filename = f"https://ddragon.leagueoflegends.com/cdn/img/champion/splash/{champion}_{id}.jpg"
             random.shuffle(names)
             return render_template("skin.html", summoner=session["summoner"],  names = names, filename = filename, score = session["score"])
 
@@ -127,7 +127,7 @@ def spell():
             session["score"] += 1
         # Generate question of the "What is this spell" type
         num, names, id = generate_question_spell_name(session["mains_names"])
-        filename = f"dragontail/13.8.1/img/spell/{id}.png"
+        filename = f"https://ddragon.leagueoflegends.com/cdn/13.8.1/img/spell/{id}.png"
 
         # Remember correct answer and render template
         session["correct_answer"] = names[num]
@@ -149,7 +149,7 @@ def spell():
             session["score"] += 1
         
         num, names, id = generate_question_spell_name(session["mains_names"])
-        filename = f"dragontail/13.8.1/img/spell/{id}.png"
+        filename = f"https://ddragon.leagueoflegends.com/cdn/13.8.1/img/spell/{id}.png"
         session["correct_answer"] = names[num]
 
 
@@ -169,7 +169,7 @@ def mastery():
             session["score"] += 1
         mastery, question, roll, name = generate_question_mastery(session["mains_id"], session["mastery"])
         name = format_name(name)
-        filename = f"dragontail/13.8.1/img/champion/{name}.png"
+        filename = f"https://ddragon.leagueoflegends.com/cdn/13.8.1/img/champion/{name}.png"
         session["correct_answer"] = roll
         return render_template("mastery.html", mastery = mastery, question = question, roll = roll, filename = filename, name = name)
     
@@ -189,7 +189,7 @@ def mastery():
 
         mastery, question, roll, name = generate_question_mastery(session["mains_id"], session["mastery"])
         name = format_name(name)
-        filename = f"dragontail/13.8.1/img/champion/{name}.png"
+        filename = f"https://ddragon.leagueoflegends.com/cdn/13.8.1/img/champion/{name}.png"
         session["correct_answer"] = roll
 
         return render_template("mastery.html", mastery = mastery, question = question, roll = roll, filename = filename, name = name)

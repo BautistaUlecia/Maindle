@@ -15,7 +15,7 @@ YOUR MAINS ARE <br>
 {{mains_names}} <br>
 
 {% for image in images_list %}
-    <img src="{{ url_for('static', filename = image) }}">
+    <img src="{{image}}">
 {% endfor %}
 
 <form action="/skin" method="get">

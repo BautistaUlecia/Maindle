@@ -11,7 +11,7 @@ mastery question
 <h4>SCORE = {{session["score"]}}</h4>
 
 
-<img src="{{ url_for('static', filename = filename) }}"> <br>
+<img src="{{filename}}"> <br>
 <h2>Would you, {{session["summoner"]}}, say that you have MORE or LESS than {{'{:,}'.format(question)}} mastery with {{name}}</h2>
 <footer>
     <form action="/mastery" method="post">
