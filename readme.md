@@ -6,5 +6,5 @@ again using data from riot.
 
 Questions may include information about the champions abilities, stats, build, lore, quotes, combos and splashes
   
-very incomplete version hosted at:
+test (unbalanced and thus, not very fun, but functional) version hosted at:
 https://tutsini.pythonanywhere.com/
