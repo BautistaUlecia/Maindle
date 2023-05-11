@@ -5,3 +5,6 @@ Original idea as of 20/4/2023 is a web app that collects user information from r
 again using data from riot.
 
 Questions may include information about the champions abilities, stats, build, lore, quotes, combos and splashes
+  
+very incomplete version hosted at:
+https://tutsini.pythonanywhere.com/
