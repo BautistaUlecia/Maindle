@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<script src="{{ url_for('static', filename='spells.js') }}"></script>
+{% endblock %}
+
+{% block title %}
+    spell question
+{% endblock %}
+
+{% block main %}
+<h1> <a href="/">MAINDLE</h1></a>
+
+<h4>SCORE: {{session["score"]}}</h4>
+
+
+<img src="{{filename}}" class="ability">
+<footer>
+    <form action="/spell" method="post" autocomplete="off">
+        <input autofocus class="form-control mx-auto w-auto" id="spell" name="spell" placeholder="Ability Name" type="text">
+    </form>
+</footer>
+
+<script>
+    $( function() {
+        $( "#spell" ).autocomplete({
+            source: function(request, response){
+                var results = $.ui.autocomplete.filter(values, request.term);
+                response(results.slice(0, 1)); // limit the number of results to 1
+            },
+            minLenght: 0,
+
+        });
+    });
+</script>
+{% endblock %}
