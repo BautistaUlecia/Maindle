@@ -7,7 +7,7 @@ import random
 
 
 #Configure application
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 #Configure DB using sqlite
 #db = SQL("sqlite:///project.db")

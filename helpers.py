@@ -57,7 +57,7 @@ def champ_id_to_name(mains_id):
         return mains_names
     
 def format_name(name):
-    # Takes care of weird name formatting inside riot's database
+    # Takes care of inconsistent name formatting inside riot's database
     if name == "K'Sante":
         return "KSante"
     if name == "Kog'Maw":
@@ -66,6 +66,9 @@ def format_name(name):
         return "RekSai"
     if name == "Wukong":
         return "MonkeyKing"
+    if name== "LeBlanc":
+        return "Leblanc"
+    
     name = name.replace(" ", "")
     if "'" in name:
         name = name.replace("'", "")
