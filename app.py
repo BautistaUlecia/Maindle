@@ -35,7 +35,6 @@ def index():
 @app.route("/found", methods=["GET", "POST"])
 def found():
     if request.method=="POST":
-        # Image list for display on "found" page (just thought it looked kind of neat)
         images_list = []
 
         # Set variables for current user in session
