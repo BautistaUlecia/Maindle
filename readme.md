@@ -9,4 +9,6 @@ Questions may include information about the champions abilities, stats, build, l
 test (unbalanced and thus, not very fun, but functional) version hosted at:
 https://tutsini.pythonanywhere.com/
   
+if not league of legends player, can input "Kravst" as example username.
+  
 
