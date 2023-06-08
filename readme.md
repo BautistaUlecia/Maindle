@@ -9,6 +9,6 @@ Questions may include information about the champions abilities, stats, build, l
 test (unbalanced and thus, not very fun, but functional) version hosted at:
 https://tutsini.pythonanywhere.com/
   
-if not a league of legends player, you can input "Kravst" as an example summoner name.
+if not a league of legends player, you can input "Kravst", "Pablo", "Hyorin" as example summoner names.
   
 
