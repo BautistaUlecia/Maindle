@@ -1,6 +1,6 @@
 import os
 from flask import Flask, redirect, render_template, request, session, flash
-from helpers import lookup, lookup_champs, champ_id_to_name, generate_question_skin_name, format_name, generate_question_spell_name, generate_question_mastery
+from helpers import lookup, lookup_champs, champ_id_to_name, generate_question_skin_name, format_name, generate_question_spell_name, generate_question_mastery, compute_score
 import json
 from flask_session import Session
 import random
@@ -41,6 +41,7 @@ def found():
         session["score"] = 0
         session["user_answer"] = "1"
         session["correct_answer"] = "0"
+        session["lives"] = 4
 
         # Store name and region entered by user
         session["summoner"]  = request.form.get("summoner")
@@ -80,8 +81,8 @@ def found():
 @app.route("/skin", methods=["GET", "POST"])
 def skin():
     if request.method=="GET":
-        if (session["user_answer"] == session["correct_answer"]):
-            session["score"] += 1
+        if (compute_score() == False):
+            return redirect ("/gameover")
         # Generate a question and render it on screen. Filename is the image for that question
         champion, names, id = generate_question_skin_name(session["mains_names"])
         filename = f"https://ddragon.leagueoflegends.com/cdn/img/champion/splash/{champion}_{id}.jpg"
@@ -89,7 +90,7 @@ def skin():
         # Remember correct answer (again feels hacky / wrong)
         session["correct_answer"] = names[0]
         random.shuffle(names)
-        return render_template("skin.html", summoner=session["summoner"], names = names, filename = filename, score = session["score"])
+        return render_template("skin.html", summoner=session["summoner"], names = names, filename = filename, score = session["score"], lives = session["lives"])
 
     if request.method=="POST":
         # Remember answer from the original request
@@ -105,14 +106,14 @@ def skin():
         else:
             # If not redirected, about to generate another skin question. Compute original answer before asigning new one
             session["user_answer"] = request.form.get("answer")
-            if (session["user_answer"] == session["correct_answer"]):
-                session["score"] += 1
+        if (compute_score() == False):
+            return redirect ("/gameover")
             # Generate question of the "What skin is this" type
             champion, names, id = generate_question_skin_name(session["mains_names"])
             session["correct_answer"] = names[0]
             filename = f"https://ddragon.leagueoflegends.com/cdn/img/champion/splash/{champion}_{id}.jpg"
             random.shuffle(names)
-            return render_template("skin.html", summoner=session["summoner"],  names = names, filename = filename, score = session["score"])
+            return render_template("skin.html", summoner=session["summoner"],  names = names, filename = filename, score = session["score"], lives = session["lives"])
 
 
 
@@ -125,15 +126,15 @@ def skin():
 @app.route("/spell", methods=["GET", "POST"])
 def spell():
     if request.method=="GET":
-        if (session["user_answer"] == session["correct_answer"]):
-            session["score"] += 1
+        if (compute_score() == False):
+            return redirect ("/gameover")
         # Generate question of the "What is this spell" type
         num, names, id = generate_question_spell_name(session["mains_names"])
         filename = f"https://ddragon.leagueoflegends.com/cdn/13.8.1/img/spell/{id}.png"
 
         # Remember correct answer and render template
         session["correct_answer"] = names[num]
-        return render_template("spell.html", summoner=session["summoner"],  names = names, filename = filename, score = session["score"])
+        return render_template("spell.html", summoner=session["summoner"],  names = names, filename = filename, score = session["score"], lives = session["lives"])
 
 
     if request.method=="POST":
@@ -147,15 +148,14 @@ def spell():
             return redirect("/mastery")
         
         # If posted and not redirected, compute last known answer and generate another question
-        if (session["user_answer"] == session["correct_answer"]):
-            session["score"] += 1
-        
+        if (compute_score() == False):
+            return redirect ("/gameover")
         num, names, id = generate_question_spell_name(session["mains_names"])
         filename = f"https://ddragon.leagueoflegends.com/cdn/13.8.1/img/spell/{id}.png"
         session["correct_answer"] = names[num]
 
 
-    return render_template("spell.html", summoner=session["summoner"],  names = names, filename = filename, score = session["score"])
+    return render_template("spell.html", summoner=session["summoner"],  names = names, filename = filename, score = session["score"], lives = session["lives"])
 
 
 
@@ -167,13 +167,13 @@ def mastery():
     if request.method == "GET":
         print(session["user_answer"])
         print(session["correct_answer"])
-        if (session["user_answer"] == session["correct_answer"]):
-            session["score"] += 1
+        if (compute_score() == False):
+            return redirect ("/gameover")
         mastery, question, roll, name = generate_question_mastery(session["mains_id"], session["mastery"])
         name = format_name(name)
         filename = f"https://ddragon.leagueoflegends.com/cdn/13.8.1/img/champion/{name}.png"
         session["correct_answer"] = roll
-        return render_template("mastery.html", mastery = mastery, question = question, roll = roll, filename = filename, name = name)
+        return render_template("mastery.html", mastery = mastery, question = question, roll = roll, filename = filename, name = name, lives = session["lives"])
     
     
     if request.method == "POST":
@@ -194,4 +194,11 @@ def mastery():
         filename = f"https://ddragon.leagueoflegends.com/cdn/13.8.1/img/champion/{name}.png"
         session["correct_answer"] = roll
 
-        return render_template("mastery.html", mastery = mastery, question = question, roll = roll, filename = filename, name = name)
+        return render_template("mastery.html", mastery = mastery, question = question, roll = roll, filename = filename, name = name, lives = session["lives"])
+    
+
+
+
+@app.route("/gameover", methods=["GET", "POST"])
+def gameover():
+    return render_template("gameover.html")

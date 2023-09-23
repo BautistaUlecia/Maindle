@@ -8,6 +8,12 @@ mastery question
 <h1> <a href="/">MAINDLE</h1></a>
 
 <h4>SCORE: {{session["score"]}}</h4>
+<h1>Lives:</h1>
+<div>
+    {% for _ in range(lives) %}
+        <span class="heart">❤️</span>
+    {% endfor %}
+</div>
 
 
 <img src="{{filename}}"> <br>

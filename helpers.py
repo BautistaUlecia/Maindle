@@ -186,3 +186,11 @@ def generate_question_mastery(ids, mastery):
 
 
     return mastery[num], question, roll, name[0]
+
+def compute_score():
+    if (session["user_answer"] == session["correct_answer"]):
+        session["score"] += 1
+    else:
+        session["lives"] -= 1
+    if session["lives"] <= 0:
+        return False
